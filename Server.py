@@ -106,35 +106,23 @@ def get_group_names():
         print(Colors.GREEN + "group name was not entered so couldn't start the game")
 
 
-def send_message_to_group(message, group):
-    for key in group.keys():
-        try:
-            key.sendall(message)
-        except Exception as e:
-            print(e)
-            pass
-
 
 def send_message(message):
     try:
         CONN_A.sendall(message.encode())
         CONN_B.sendall(message.encode())
     except Exception as e:
-        print(e)
         pass
 
 
 def receive_char():
     global A_WON, gotAnswer, CONN_A, CONN_B
-    # CONN_A.setblocking(0)
-    # CONN_B.setblocking(0)
+
     gotAnswer = False
     timeout = time.time() + TIME_TO_PLAY
     while time.time() < timeout and gotAnswer == False:
         try:
-
             data = CONN_A.recv(1024)
-
             if int(data) == answer:
                 A_WON = True
             else:
@@ -149,7 +137,6 @@ def receive_char():
                 else:
                     A_WON = True
                 gotAnswer = True
-
             except:
                 time.sleep(0.1)
 
@@ -232,7 +219,7 @@ def start_tcp():
 
 
 def main():
-    global counter
+    global counter,A_WON,gotAnswer,answer
     start_tcp()
     connections = {}
     while True:
@@ -258,3 +245,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
