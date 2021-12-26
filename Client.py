@@ -36,6 +36,21 @@ class style:
     UNDERLINE = '\033[4m'
     RESET = '\033[0m'
 
+
+
+# Group of Different functions for different styles
+class style:
+    BLACK = '\033[30m'
+    RED = '\033[31m'
+    GREEN = '\033[32m'
+    YELLOW = '\033[33m'
+    BLUE = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN = '\033[36m'
+    WHITE = '\033[37m'
+    UNDERLINE = '\033[4m'
+    RESET = '\033[0m'
+
 def printMessageOrRead():
     readers, _, _ = select.select([sys.stdin, sockTCP], [], [])
     for reader in readers:
@@ -67,7 +82,6 @@ def start_tcp(ip, tcp_port):
     sockTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # init TCP socket
     sockTCP.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sockTCP.connect((ip, tcp_port))
-
 
 
 while True:
