@@ -4,8 +4,6 @@ import struct
 import sys
 import select
 
-# import getch
-
 os.system("")
 
 UDP_PORT = 13117
@@ -20,7 +18,6 @@ class Colors:
     GREEN = '\033[32m'
     BLUE = '\033[34m'
     PINK = '\033[35m'
-    RESET = '\033[0m'
 
 
 def printMessageOrRead():
@@ -31,7 +28,7 @@ def printMessageOrRead():
             data = sockTCP.recv(MESSAGE_LEN).decode()
             print(Colors.PINK + data)
         else:
-            ch = sys.stdin.readline()
+            ch = sys.stdin.read(1)
             sockTCP.sendall(ch.encode())
             printMessageOrRead()  # because will need to print server answer
 
@@ -58,8 +55,16 @@ def start_tcp(ip, tcp_port):
     sockTCP.connect((ip, tcp_port))
 
 
+def print_start(first_print):
+    if first_print == 0:
+        print(Colors.GREEN + "Client started, listening for offer requests...")
+
+
+first_print = 0
 while True:
-    print(Colors.GREEN + "Client started, listening for offer requests...")  # waits for server suggestion
+    print_start(first_print)
+    first_print += 1
+    # waits for server suggestion
     # part 1 get udp message
     ip, message = start_udp()
     try:
@@ -79,7 +84,9 @@ while True:
             # part 6 play game, win or lost
             printMessageOrRead()
             print(Colors.BLUE + "Server disconnected, listening for offer requests...")
+            first_print = 0
         else:
-            print(Colors.GREEN + "Bad UDP Message Format")  # got message not in the expected format
+            print(Colors.GREEN + "Bad UDP Message Format")
+            # got message not in the expected format
     except Exception as e:
-        print(e)
+        pass

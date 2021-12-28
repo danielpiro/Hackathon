@@ -32,7 +32,7 @@ counter = 0
 def start_udp():
     global sockUDP
     ip = get_if_addr("eth1")
-    #ip = "0.0.0.0"
+    # ip = "0.0.0.0"
     sockUDP = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)  # UDP
     sockUDP.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sockUDP.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -58,8 +58,10 @@ def connect_clients():
                 conn, address = sockTCP.accept()
                 if counter == 0:
                     CONN_A = conn
+                    CONN_A.setblocking(0)
                 else:
                     CONN_B = conn
+                    CONN_B.setblocking(0)
 
                 counter += 1
             except Exception as e:
@@ -95,8 +97,6 @@ def receive_char(answer):
     got_answer = False
     timeout = time.time() + TIME_TO_PLAY
 
-    CONN_A.setblocking(0)
-    CONN_B.setblocking(0)
     while time.time() < timeout and not got_answer:
         try:
             data = CONN_A.recv(1024)
@@ -105,7 +105,6 @@ def receive_char(answer):
             else:
                 a_won = False
             got_answer = True
-            print(Colors.BLUE + "got data from A, A's answer is " + str(data) + " but the correct answer is " + str(answer))
             return a_won, got_answer
         except Exception as e:
             try:
@@ -115,7 +114,6 @@ def receive_char(answer):
                 else:
                     a_won = True
                 got_answer = True
-                print(Colors.BLUE + "got data from B, B's answer is " + str(data) + " but the correct answer is " + str(answer))
 
                 return a_won, got_answer
             except Exception as e:
@@ -149,15 +147,12 @@ def send_math_question():
         print(e)
 
 
-
 def start_game():
-
     # part 1 - only thing that can stop a game, get group names
     try:
         time.sleep(TIME_UNTIL_GAME)
         name_a, name_b, isValid = get_group_names()
         if isValid:
-
             # part 2 - send the openning message and random math question
             begin_message = "Welcome to Quick Maths.\nPlayer 1: " + name_a + "\nPlayer 2: " + name_b + "\n====\n Please " \
                                                                                                        "answer the " \
@@ -176,6 +171,7 @@ def start_game():
     except Exception as e:
         print(e)
 
+
 def start_tcp():
     global sockTCP
     sockTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # init the TCP socket
@@ -190,7 +186,6 @@ def reset_params():
 
 
 def main():
-
     global counter
     start_tcp()
     while True:
