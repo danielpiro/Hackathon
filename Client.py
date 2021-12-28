@@ -42,7 +42,7 @@ def start_udp():
     sockUDP = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)  # init UDP socket
     sockUDP.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     sockUDP.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    # sockUDP.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    sockUDP.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
     sockUDP.bind(("", UDP_PORT))
     # assume server started and need to connect
     message, location = sockUDP.recvfrom(MESSAGE_LEN)
