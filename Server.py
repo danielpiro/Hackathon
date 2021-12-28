@@ -32,7 +32,6 @@ counter = 0
 def start_udp():
     global sockUDP
     ip = get_if_addr("eth1")
-    # ip = "0.0.0.0"
     sockUDP = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)  # UDP
     sockUDP.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sockUDP.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -45,7 +44,7 @@ def send_broadcast():
     print(Colors.GREEN + "Server started, listening on IP address " + ip)
 
     while counter < 2:
-        buffer = struct.pack('LBH', 0xabcddcba, 0x2, TCP_DEST_PORT)
+        buffer = struct.pack('IBH', 0xabcddcba, 0x2, TCP_DEST_PORT)
         sockUDP.sendto(buffer, (UDP_DEST_IP, UDP_DEST_PORT))
         time.sleep(1)  # dont overload
 
@@ -53,7 +52,7 @@ def send_broadcast():
 def connect_clients():
     global counter, sockTCP, CONN_B, CONN_A  # can use address later
     while True:
-        if counter < 2:  # time.time() < time_out and counter < 2:
+        if counter < 2:
             try:
                 conn, address = sockTCP.accept()
                 if counter == 0:
@@ -144,13 +143,14 @@ def send_math_question():
         send_message("How much is: " + math[value] + "?\n")
         return answerTable[value]
     except Exception as e:
-        print(e)
+        pass
 
 
 def start_game():
-    # part 1 - only thing that can stop a game, get group names
     try:
         time.sleep(TIME_UNTIL_GAME)
+
+        # part 1 - only thing that can stop a game, get group names
         name_a, name_b, isValid = get_group_names()
         if isValid:
             # part 2 - send the openning message and random math question
@@ -169,7 +169,7 @@ def start_game():
             send_end_message(name_a, name_b, answer, a_won, got_answer)
 
     except Exception as e:
-        print(e)
+        pass
 
 
 def start_tcp():

@@ -70,7 +70,7 @@ while True:
     try:
         # part 2 connect to server
         printBool = True
-        cookie, msg_type, tcp_port = struct.unpack('LBH', message)
+        cookie, msg_type, tcp_port = struct.unpack('IBH', message)
         # part 3 make sure it's the correct server
         if cookie == 0xabcddcba and msg_type == 0x2:  # check if message is as expected
             print(Colors.GREEN + "Received offer from " + ip + " attempting to connect...")
